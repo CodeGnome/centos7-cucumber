@@ -87,3 +87,10 @@
 
     - name: fix group ownership of rbenv system install
       command: chown -R :{{ rbenv_group }} {{ rbenv_root }}
+
+    - name: ensure /usr/local/src is writable by mortal user
+      file:
+        path: /usr/local/src
+        owner: "{{ mortal_user }}"
+        group: "{{ mortal_user }}"
+        mode: "u=rwx,g=rws,o=rx"
