@@ -1,0 +1,11 @@
+*,v
+*.swp
+.DS_Store
+.envrc
+.git
+.gitignore
+/bin
+AUTHORS
+COPYRIGHT
+LICENSE
+README.md

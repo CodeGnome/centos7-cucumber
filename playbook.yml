@@ -1,0 +1,89 @@
+---
+- hosts: 127.0.0.1
+  connection: local
+
+  vars:
+    ruby_version: 2.4.1
+    mortal_user: vagrant
+    rbenv_group: rbenv
+    rbenv_root: /usr/local/rbenv
+    rbenv:
+      env: system
+      version: master
+      default_ruby: "{{ ruby_version }}"
+      rubies:
+        - version: "{{ ruby_version }}"
+      rbenv_group: "{{ rbenv_group }}"
+
+  tasks:
+    - name: create rbenv group for system account
+      group:
+        name: "{{ rbenv_group }}"
+        system: true
+
+    - name: create mortal user account
+      user:
+        name: "{{ mortal_user }}"
+        groups: "{{ rbenv_group }}"
+        append: true
+
+    - name: install system packages
+      action: "{{ ansible_pkg_mgr }} name={{ item }} state=present update_cache=yes"
+      with_items:
+        - bzip2
+        - fontconfig
+        - git
+        - make
+        - npm
+        - sudo
+        - which
+
+    - name: install phantomjs via npm
+      command: npm install -g phantomjs-prebuilt
+      args:
+        creates: "/usr/lib/node_modules/phantomjs/lib/phantom/bin/phantomjs"
+
+    - name: enable passwordless sudo for mortal_user
+      copy:
+        content: "%{{ mortal_user }} ALL=(ALL) NOPASSWD: ALL"
+        dest: "/etc/sudoers.d/{{ mortal_user }}"
+        force: true
+        validate: "/usr/sbin/visudo -cf %s"
+
+    - name: install rbenv from role
+      include_role:
+        name: zzet.rbenv
+
+    - name: fix broken rbenv-default-gems plugin
+      git:
+        repo: https://github.com/rbenv/rbenv-default-gems.git
+        dest: "{{ rbenv_root }}/plugins/rbenv-default-gems"
+        clone: yes
+        update: yes
+        version: master
+
+    - name: check for bundler
+      command: /usr/local/rbenv/shims/gem list -i bundler
+      ignore_errors: true
+      register: bundler_check
+
+    - name: install bundler
+      shell: /usr/local/rbenv/shims/gem install bundler
+      when: bundler_check|failed
+
+    - name: add bundler to default gems on future installations
+      lineinfile:
+        path: "{{ rbenv_root }}/default-gems"
+        state: present
+        create: true
+        regexp: '^bundler'
+        line: bundler
+
+    - name: fix directory permissions on rbenv system install
+      command: find {{ rbenv_root }} -type d -exec chmod g+ws {} +
+
+    - name: fix file permissions on rbenv system install
+      command: find {{ rbenv_root }} -type f -exec chmod g+w {} +
+
+    - name: fix group ownership of rbenv system install
+      command: chown -R :{{ rbenv_group }} {{ rbenv_root }}
