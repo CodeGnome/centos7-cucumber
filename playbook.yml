@@ -93,12 +93,12 @@
         path: /usr/local/src
         owner: "{{ mortal_user }}"
         group: "{{ mortal_user }}"
-        mode: "u=rwx,g=rws,o=rx"
+        mode: "u=rwx,g=rwxs,o=rx"
 
     - name: create /srv/src as alternate mount point
       file:
         path: /srv/src
         owner: "{{ mortal_user }}"
         group: "{{ mortal_user }}"
-        mode: "u=rwx,g=rws,o=rx"
+        mode: "u=rwx,g=rwxs,o=rx"
         state: directory
