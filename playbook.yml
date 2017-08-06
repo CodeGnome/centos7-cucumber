@@ -94,3 +94,11 @@
         owner: "{{ mortal_user }}"
         group: "{{ mortal_user }}"
         mode: "u=rwx,g=rws,o=rx"
+
+    - name: create /srv/src as alternate mount point
+      file:
+        path: /srv/src
+        owner: "{{ mortal_user }}"
+        group: "{{ mortal_user }}"
+        mode: "u=rwx,g=rws,o=rx"
+        state: directory
