@@ -57,7 +57,7 @@ your own risk.
 
 ## Usage
 
-### Example Command-Line Interaction
+### Example Command-Line Docker Interaction
 
     docker start cucumber && docker attach cucumber
 
