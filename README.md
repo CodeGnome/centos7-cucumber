@@ -57,9 +57,11 @@ your own risk.
 
 ## Usage
 
+### Example Command-Line Interaction
+
     docker start cucumber && docker attach cucumber
 
-## Adding Gems
+### Adding Ruby Gems to Containers
 The expectation is that your project's source code is being mounted at
 */usr/local/src*, and that you will want to run the gems bundled into
 your application's source code. However, some testers don't have the
