@@ -95,5 +95,5 @@ being overriden simply by omitting `bundle`exec`.
 [3]: http://i.creativecommons.org/l/by-nc-sa/3.0/us/88x31.png
 [4]: https://creativecommons.org/licenses/by-nc-sa/4.0/
 [5]: https://codenvy.io
-[6]: https://hub.docker.com/r/codegnome/cucumber-centos7/
+[6]: https://hub.docker.com/r/codegnome/centos7-cucumber/
 [7]: https://goo.gl/iNsBjr
